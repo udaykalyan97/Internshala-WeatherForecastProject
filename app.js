@@ -1,6 +1,9 @@
 // Get current Location button
 const currentLocation = document.getElementById('currentLocation');
-currentLocation.addEventListener('click', getLocationWeather);
+currentLocation.addEventListener('click', () => {
+    clearExtendedForecast();
+    getLocationWeather();
+});
 
 // Search input and history dropdown
 const cityInput = document.getElementById('cityInput');
@@ -17,11 +20,14 @@ function storeSearchHistory(city) {
     }
 }
 
+
 // Function to display search history
 function displaySearchHistory() {
     historyDropdown.innerHTML = '';
     if (searchHistory.length > 0) {
-        searchHistory.forEach(city => {
+        // Limit to the last 6 entries
+        const limitedHistory = searchHistory.slice(-6);
+        limitedHistory.forEach(city => {
             const historyItem = document.createElement('div');
             historyItem.textContent = city;
             historyItem.classList.add('p-2', 'cursor-pointer', 'hover:bg-gray-200');
@@ -37,6 +43,7 @@ function displaySearchHistory() {
     }
 }
 
+
 // Show search history when input is focused
 cityInput.addEventListener('focus', displaySearchHistory);
 
@@ -51,6 +58,7 @@ document.addEventListener('click', (event) => {
 document.getElementById('searchButton').addEventListener('click', () => {
     const cityName = cityInput.value;
     if (cityName) {
+        clearExtendedForecast(); // Clear and hide extended forecast display
         fetchWeatherDataByCity(cityName);
         storeSearchHistory(cityName);
         cityInput.blur(); // Close the dropdown after selection
@@ -58,6 +66,13 @@ document.getElementById('searchButton').addEventListener('click', () => {
         alert('Enter a valid city name');
     }
 });
+
+// Clear and hide extended forecast display
+function clearExtendedForecast() {
+    document.getElementById('extendedForecast').classList.add('hidden');
+    document.getElementById('forecastDisplay').innerHTML = ''; // Clear previous data
+    document.getElementById('extendedForecastButton').classList.remove('hidden'); // Show button
+}
 
 // Get current location coordinates
 function getLocationWeather() {
@@ -79,12 +94,16 @@ function fetchWeatherData(position) {
         .then(response => response.json())
         .then(data => {
             updateWeatherDisplay(data);
-            document.getElementById('extendedForecastButton').classList.remove('hidden'); // Show button after getting current weather
+            setTimeout(()=>{
+                document.getElementById('extendedForecastButton').classList.remove('hidden'); // Show button after getting current weather
+            },3000);
+            
         })
         .catch(error => {
             console.error("Error fetching weather data:", error);
             alert("Error fetching weather data.");
         });
+        
 }
 
 // Show error if geolocation fails
@@ -154,7 +173,7 @@ function updateWeatherDisplay(data) {
 
 // Extended Forecast Button
 document.getElementById('extendedForecastButton').addEventListener('click', () => {
-    const cityName = cityInput.value;
+    const cityName = document.getElementById('cityName').textContent.split(": ")[1];
     if (cityName) {
         fetchExtendedForecast(cityName);
     } else {
@@ -213,5 +232,5 @@ function updateForecastDisplay(data) {
     });
 
     document.getElementById('extendedForecast').classList.remove('hidden');
-    document.getElementById('extendedForecastButton').classList.add('hidden');
+    document.getElementById('extendedForecastButton').classList.add('hidden'); // Hide button after fetching
 }
