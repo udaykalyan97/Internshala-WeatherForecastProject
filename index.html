@@ -30,7 +30,7 @@
                 Search
             </button>
         </div>
-        
+
         <!-- Search History Dropdown -->
         <div id="historyDropdown" class="absolute bg-white border border-gray-300 rounded-lg w-full mt-1 hidden z-8"></div>
 
@@ -48,22 +48,34 @@
     </div>
 
     <!-- Weather Display Section -->
-    <div id="weatherDisplay" class="bg-white bg-opacity-20 p-3 md:p-8 rounded-lg shadow-lg w-full max-w-md md:max-w-2xl animate-slideInUp hidden">
+    <div id="weatherDisplay" class="bg-white bg-opacity-20 p-3 md:p-8 rounded-lg shadow-lg w-full max-w-md md:max-w-2xl mb-5 animate-slideInUp hidden">
         <h2 class="text-2xl md:text-3xl font-semibold text-white">Current Weather</h2>
         <div class="flex flex-col md:flex-row justify-between items-center text-white">
             <div class="mb-2 md:mb-0">
+                <p id="dateTime" class="text-xl md:text-2xl"></p>
                 <p id="cityName" class="text-xl md:text-2xl capitalize"></p>
                 <p id="temperature" class="text-lg md:text-xl capitalize"></p>
                 <p id="wind" class="text-lg md:text-xl capitalize"></p>
                 <p id="humidity" class="text-lg md:text-xl capitalize"></p>
-                <p id="date" class="text-lg md:text-xl capitalize"></p>
-                <p id="time" class="text-lg md:text-xl capitalize"></p>
             </div>
             <div id="weatherIcon" class="flex flex-col justify-center items-center">
                 <p id="condition" class="text-lg md:text-xl capitalize"></p>
-                <img id="icon">
+                <img id="icon" class="w-16 h-16">
             </div>
         </div>
+    </div>
+
+    <!-- Extended Forecast Section -->
+    <div id="extendedForecast" class="bg-white bg-opacity-20 p-3 md:p-8 rounded-lg shadow-lg w-full max-w-md md:max-w-2xl animate-slideInUp hidden">
+        <h2 class="text-2xl md:text-3xl font-semibold text-white">Extended Forecast</h2>
+        <div id="forecastDisplay" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-white"></div>
+    </div>
+
+    <!-- Extended Forecast Button -->
+    <div class="flex justify-center mt-4">
+        <button id="extendedForecastButton" class="bg-yellow-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-yellow-700 transition-all duration-300 hidden">
+            Show Extended Forecast
+        </button>
     </div>
 
     <!-- Tailwind CSS Animations -->

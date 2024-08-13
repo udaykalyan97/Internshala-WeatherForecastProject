@@ -54,7 +54,7 @@ document.getElementById('searchButton').addEventListener('click', () => {
         fetchWeatherDataByCity(cityName);
         storeSearchHistory(cityName);
         cityInput.blur(); // Close the dropdown after selection
-    }else{
+    } else {
         alert('Enter a valid city name');
     }
 });
@@ -79,6 +79,7 @@ function fetchWeatherData(position) {
         .then(response => response.json())
         .then(data => {
             updateWeatherDisplay(data);
+            document.getElementById('extendedForecastButton').classList.remove('hidden'); // Show button after getting current weather
         })
         .catch(error => {
             console.error("Error fetching weather data:", error);
@@ -97,7 +98,7 @@ function fetchWeatherDataByCity(cityName) {
         .then(coords => {
             const lat = coords.lat;
             const lon = coords.lon;
-            const apiKey = '839272a6b4e47d466830cfdf3fa24dfd'; 
+            const apiKey = '839272a6b4e47d466830cfdf3fa24dfd';
             const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
             return fetch(url);
@@ -105,6 +106,7 @@ function fetchWeatherDataByCity(cityName) {
         .then(response => response.json())
         .then(data => {
             updateWeatherDisplay(data);
+            document.getElementById('extendedForecastButton').classList.remove('hidden'); // Show button after fetching weather
         })
         .catch(error => {
             console.error("Error fetching weather data:", error);
@@ -114,7 +116,7 @@ function fetchWeatherDataByCity(cityName) {
 
 // Get coordinates of a city
 function getCoordinates(cityName) {
-    const apiKey = '839272a6b4e47d466830cfdf3fa24dfd'; 
+    const apiKey = '839272a6b4e47d466830cfdf3fa24dfd';
     const url = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${apiKey}`;
 
     return fetch(url)
@@ -136,26 +138,80 @@ function getCoordinates(cityName) {
 
 // Update weather display with fetched data
 function updateWeatherDisplay(data) {
-    // Calculate the correct local time
-    const utcTime = data.dt * 1000; // UTC time in milliseconds
-    const timezoneOffset = data.timezone * 1000; // Timezone offset in milliseconds
-    const localTime = new Date(utcTime + timezoneOffset);
-
-    // Format the date and time
-    const formattedDate = localTime.toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' });
-    const formattedTime = localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-
+    const date = new Date(data.dt * 1000).toLocaleDateString();
+    document.getElementById('dateTime').textContent = `Date: ${date}`;
     document.getElementById('cityName').textContent = `City: ${data.name}`;
     document.getElementById('condition').textContent = `Condition: ${data.weather[0].description}`;
     document.getElementById('temperature').textContent = `Temperature: ${data.main.temp} °C`;
     document.getElementById('wind').textContent = `Wind: ${data.wind.speed} m/s`;
     document.getElementById('humidity').textContent = `Humidity: ${data.main.humidity}%`;
-    document.getElementById('date').textContent = `Date: ${formattedDate}`;
-    document.getElementById('time').textContent = `Time: ${formattedTime}`;
 
     const img = document.getElementById('icon');
-    img.classList.add('animate-pulse');
     img.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
 
     document.getElementById('weatherDisplay').classList.remove('hidden');
+}
+
+// Extended Forecast Button
+document.getElementById('extendedForecastButton').addEventListener('click', () => {
+    const cityName = cityInput.value;
+    if (cityName) {
+        fetchExtendedForecast(cityName);
+    } else {
+        alert('Please enter a valid city name to view the extended forecast.');
+    }
+});
+
+// Fetch extended forecast data
+function fetchExtendedForecast(cityName) {
+    getCoordinates(cityName)
+        .then(coords => {
+            const lat = coords.lat;
+            const lon = coords.lon;
+            const apiKey = '839272a6b4e47d466830cfdf3fa24dfd';
+            const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+            return fetch(url);
+        })
+        .then(response => response.json())
+        .then(data => {
+            updateForecastDisplay(data);
+        })
+        .catch(error => {
+            console.error("Error fetching extended forecast data:", error);
+            alert("Error fetching extended forecast data.");
+        });
+}
+
+// Update forecast display with fetched data
+function updateForecastDisplay(data) {
+    const forecastDisplay = document.getElementById('forecastDisplay');
+    forecastDisplay.innerHTML = ''; // Clear previous data
+    const seenDates = new Set(); // To track displayed dates
+
+    data.list.forEach(item => {
+        const date = new Date(item.dt * 1000).toLocaleDateString();
+
+        // Only show future dates and skip duplicates
+        if (!seenDates.has(date) && new Date(item.dt * 1000) > new Date()) {
+            seenDates.add(date);
+
+            // Create forecast item element
+            const forecastItem = document.createElement('div');
+            forecastItem.classList.add('bg-white', 'bg-opacity-20', 'p-4', 'rounded-lg', 'shadow-lg', 'transition', 'transform', 'hover:scale-105', 'duration-300');
+
+            forecastItem.innerHTML = `
+                <p class="font-semibold text-lg">${date}</p>
+                <p>Temperature: ${item.main.temp} °C</p>
+                <p>Wind: ${item.wind.speed} m/s</p>
+                <p>Humidity: ${item.main.humidity}%</p>
+                <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png" alt="${item.weather[0].description}" class="w-16 h-16">
+            `;
+
+            forecastDisplay.appendChild(forecastItem);
+        }
+    });
+
+    document.getElementById('extendedForecast').classList.remove('hidden');
+    document.getElementById('extendedForecastButton').classList.add('hidden');
 }
