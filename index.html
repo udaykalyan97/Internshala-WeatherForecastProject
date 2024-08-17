@@ -22,7 +22,7 @@
     </header>
 
     <!-- Search Section -->
-    <div class="bg-white bg-opacity-30 p-6 rounded-lg shadow-lg mb-8 w-full max-w-lg animate-fadeIn relative">
+    <div id="searchSection" class="bg-white bg-opacity-30 p-6 rounded-lg shadow-lg mb-8 w-full max-w-lg animate-fadeIn relative z-20">
         <div class="flex items-center space-x-4">
             <input type="text" id="cityInput" placeholder="Enter city name" class="w-full p-3 text-lg rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
             <button id="searchButton" class="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-all duration-300 flex items-center">
@@ -32,7 +32,7 @@
         </div>
 
         <!-- Search History Dropdown -->
-        <div id="historyDropdown" class="absolute bg-white border border-gray-300 rounded-lg w-full mt-1 hidden z-8"></div>
+        <div id="historyDropdown" class="absolute bg-white border border-gray-300 rounded-lg w-full mt-1 hidden z-30"></div>
 
         <div class="flex items-center justify-center mt-1">
             <div class="flex-grow border-t border-white"></div>
@@ -48,14 +48,14 @@
     </div>
 
     <!-- Weather Display Section -->
-    <div id="weatherDisplay" class="bg-white bg-opacity-20 p-3 md:p-8 rounded-lg shadow-lg w-full max-w-md md:max-w-2xl mb-5 animate-slideInUp hidden">
+    <div id="weatherDisplay" class="bg-white bg-opacity-20 p-3 md:p-8 rounded-lg shadow-lg w-full max-w-md md:max-w-2xl mb-5 animate-slideInUp hidden relative z-10">
         <h2 class="text-xl md:text-2xl font-semibold text-white">Current Weather</h2>
         <div class="flex flex-col md:flex-row justify-between items-center text-white">
             <div class="mb-2 md:mb-0">
                 <p id="cityName" class="text-xl md:text-2xl capitalize"></p>
-                <p id="temperature" class="text-lg md:text-xl capitalize"></p>
-                <p id="wind" class="text-lg md:text-xl capitalize"></p>
-                <p id="humidity" class="text-lg md:text-xl capitalize"></p>
+                <p id="temperature" class="text-lg md:text-xl"></p>
+                <p id="wind" class="text-lg md:text-xl"></p>
+                <p id="humidity" class="text-lg md:text-xl"></p>
             </div>
             <div id="weatherIcon" class="flex flex-col justify-center items-center">
                 <p id="dateTime" class="text-lg md:text-xl"></p>
