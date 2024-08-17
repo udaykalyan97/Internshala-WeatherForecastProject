@@ -223,7 +223,7 @@ function updateForecastDisplay(data) {
                 <p>Temperature: ${item.main.temp} °C</p>
                 <p>Wind: ${item.wind.speed} m/s</p>
                 <p>Humidity: ${item.main.humidity}%</p>
-                <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png" alt="${item.weather[0].description}" class="w-16 h-16">
+                <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png" alt="${item.weather[0].description}" class="w-16 h-16 animate-pulse">
             `;
 
             forecastDisplay.appendChild(forecastItem);
