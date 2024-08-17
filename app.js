@@ -25,16 +25,27 @@ function storeSearchHistory(city) {
 function displaySearchHistory() {
     historyDropdown.innerHTML = '';
     if (searchHistory.length > 0) {
-        // Limit to the last 6 entries
-        const limitedHistory = searchHistory.slice(-6);
+        // Limit to the last 8 entries
+        const limitedHistory = searchHistory.slice(-8).reverse();
         limitedHistory.forEach(city => {
             const historyItem = document.createElement('div');
-            historyItem.textContent = city;
             historyItem.classList.add('p-2', 'cursor-pointer', 'hover:bg-gray-200');
+
+            // Create the Font Awesome icon element
+            const icon = document.createElement('i');
+            icon.classList.add('fa-solid', 'fa-arrow-rotate-left', 'mr-2');
+
+            // Append the icon to the history item
+            historyItem.appendChild(icon);
+
+            // Set the city name
+            historyItem.appendChild(document.createTextNode(city));
+
             historyItem.addEventListener('click', () => {
                 cityInput.value = city;
                 historyDropdown.classList.add('hidden'); // Hide the dropdown after selection
             });
+
             historyDropdown.appendChild(historyItem);
         });
         historyDropdown.classList.remove('hidden'); // Show the dropdown
@@ -157,7 +168,7 @@ function updateWeatherDisplay(data) {
     document.getElementById('dateTime').textContent = `Date: ${date}`;
     document.getElementById('cityName').textContent = `City: ${data.name}`;
     document.getElementById('condition').textContent = `Forecast: ${data.weather[0].description}`;
-    document.getElementById('temperature').textContent = `Temperature: ${data.main.temp} °C`;
+    document.getElementById('temperature').textContent = `Temp: ${data.main.temp} °C`;
     document.getElementById('wind').textContent = `Wind: ${data.wind.speed} m/s`;
     document.getElementById('humidity').textContent = `Humidity: ${data.main.humidity}%`;
 
@@ -220,7 +231,7 @@ function updateForecastDisplay(data) {
             );
             forecastItem.innerHTML = `
                 <p class="font-semibold text-lg">${date}</p>
-                <p>Temperature: ${item.main.temp} °C</p>
+                <p>Temp: ${item.main.temp} °C</p>
                 <p>Wind: ${item.wind.speed} m/s</p>
                 <p>Humidity: ${item.main.humidity}%</p>
                 <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png" alt="${item.weather[0].description}" class="w-16 h-16 animate-pulse">
