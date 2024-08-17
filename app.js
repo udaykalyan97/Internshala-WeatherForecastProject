@@ -71,7 +71,6 @@ document.getElementById('searchButton').addEventListener('click', () => {
 function clearExtendedForecast() {
     document.getElementById('extendedForecast').classList.add('hidden');
     document.getElementById('forecastDisplay').innerHTML = ''; // Clear previous data
-    document.getElementById('extendedForecastButton').classList.remove('hidden'); // Show button
 }
 
 // Get current location coordinates
@@ -93,11 +92,8 @@ function fetchWeatherData(position) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            updateWeatherDisplay(data);
-            setTimeout(()=>{
-                document.getElementById('extendedForecastButton').classList.remove('hidden'); // Show button after getting current weather
-            },3000);
-            
+            updateWeatherDisplay(data); 
+            document.getElementById('extendedForecastButton').classList.remove('hidden'); // Show button after getting current weather 
         })
         .catch(error => {
             console.error("Error fetching weather data:", error);
@@ -160,7 +156,7 @@ function updateWeatherDisplay(data) {
     const date = new Date(data.dt * 1000).toLocaleDateString();
     document.getElementById('dateTime').textContent = `Date: ${date}`;
     document.getElementById('cityName').textContent = `City: ${data.name}`;
-    document.getElementById('condition').textContent = `Condition: ${data.weather[0].description}`;
+    document.getElementById('condition').textContent = `Forecast: ${data.weather[0].description}`;
     document.getElementById('temperature').textContent = `Temperature: ${data.main.temp} °C`;
     document.getElementById('wind').textContent = `Wind: ${data.wind.speed} m/s`;
     document.getElementById('humidity').textContent = `Humidity: ${data.main.humidity}%`;
@@ -217,8 +213,11 @@ function updateForecastDisplay(data) {
 
             // Create forecast item element
             const forecastItem = document.createElement('div');
-            forecastItem.classList.add('bg-white', 'bg-opacity-20', 'p-4', 'rounded-lg', 'shadow-lg', 'transition', 'transform', 'hover:scale-105', 'duration-300');
-
+            forecastItem.classList.add('bg-white', 'bg-opacity-20', 'p-4', 'rounded-lg', 'shadow-lg', 'transition', 'transform', 'hover:scale-105', 'duration-300',
+                'md:hover:scale-102', // Less scale on medium screens
+                'lg:hover:scale-105', // More scale on large screens
+                'xl:hover:scale-110'  // Even more scale on extra-large screens
+            );
             forecastItem.innerHTML = `
                 <p class="font-semibold text-lg">${date}</p>
                 <p>Temperature: ${item.main.temp} °C</p>
@@ -234,3 +233,24 @@ function updateForecastDisplay(data) {
     document.getElementById('extendedForecast').classList.remove('hidden');
     document.getElementById('extendedForecastButton').classList.add('hidden'); // Hide button after fetching
 }
+
+
+const forecastDisplay = document.getElementById('forecastDisplay');
+const scrollLeft = document.getElementById('scrollLeft');
+const scrollRight = document.getElementById('scrollRight');
+
+// Scroll to the left
+scrollLeft.addEventListener('click', () => {
+    forecastDisplay.scrollBy({
+        left: -200, // Adjust the scroll distance as needed
+        behavior: 'smooth' // Smooth scrolling effect
+    });
+});
+
+// Scroll to the right
+scrollRight.addEventListener('click', () => {
+    forecastDisplay.scrollBy({
+        left: 200, // Adjust the scroll distance as needed
+        behavior: 'smooth'
+    });
+});
