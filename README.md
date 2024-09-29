@@ -15,7 +15,7 @@ This Weather Forecast Application provides users with real-time weather informat
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/weather-forecast.git
+   git clone https://github.com/udaykalyan97/weather-forecast.git
    cd weather-forecast
    ```
 
